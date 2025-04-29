@@ -1,0 +1,24 @@
+services:
+  deepseek-v3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: deepseek-v3:latest
+    container_name: deepseek-v3
+    restart: unless-stopped
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"  # Puerto para API/interfaz web
+    command: ["serve"]  # Opciones: serve, convert, generate
